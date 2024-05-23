@@ -1,7 +1,0 @@
-streamlit
-python-pptx
-python-docx
-openpyxl
-PyMuPDF
-googletrans==4.0.0-rc1
-reportlab
