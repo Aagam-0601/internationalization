@@ -44,8 +44,9 @@ def app():
                     st.error("Failed to save translated content.")
             else:
                 st.error("Translation failed.")
+            st.download_button("Download file ", extracted_text)
         else:
             st.error("Failed to extract text from input file.") 
-    st.download_button("Download file ", extracted_text)
+        
 if __name__ == "__main__":
     app()
