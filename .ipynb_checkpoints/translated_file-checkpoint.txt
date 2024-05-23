@@ -1,0 +1,3 @@
+Willkommen = Willkommen
+Content = <br> Dies ist ein Projekt zur Erstellung von Asset -Erstellung zu Internalisierung und Lokalisierung in Springboot </br> Diese Art von Projekt beinhaltet normalerweise das Erstellen und Verwalten von Vermögenswerten wie Webseiten, Textressourcen usw.
+lerne = mehr lernen

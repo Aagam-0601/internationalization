@@ -1,0 +1,30 @@
+Sai Sree Gudikandula
+1
+Gudikandula Sai Sree
+
+(91) 9390471116
+Sai.Sree.gudikandula@accnture.com
+Wählen Sie Erfahrung aus (2023-till):
+Rollenbeschreibung
+ Absolvierte ein 6-monatiges Schulungsprogramm in der Java Standard Edition und erlangte eingehende Kenntnisse und Kenntnisse in der Java-Programmierung.
+ Angewandte Java Standard Edition -Fähigkeiten zur Entwicklung von JAR -Dateien, die sich nahtlos in verschiedene Anwendungen integrieren und die Internalisierungs- und Lokalisierungsmerkmale betonen.
+ Analysierte die Projektanforderungen und implementierten die Internalisierungs- und Lokalisierungsstrategien in Java-basierten Lösungen, um die Kompatibilität sicherzustellen.
+ Nahm an Team-Meetings teil, um die technischen Anforderungen zu erörtern und Integrationspläne für Java-basierte Anwendungen abzuschließen.
+ Verwendete Java Standard Edition -Wissen, um die Funktionalität und Leistung von Softwarekomponenten zu verbessern.
+ Ausführte Qualitätsprüfungen und Debugging-Prozesse, um sicherzustellen, dass Java-basierte Lösungen den Internalisierungs- und Lokalisierungsstandards erfüllen.
+ Dokumentierte Best Practices und Verfahren im Zusammenhang mit der Entwicklung von Java, die zur gemeinsamen Nutzung von Wissen und zur Zusammenarbeit des Teams beitragen.
+
+Projekte
+1. Entwickelt ein Schuldatenbankmanagementsystem, einschließlich relationaler Tabellen für Schulunternehmen (Schüler, Lehrer, Kurse) und operative Einheiten (Busse, Routen), ER -Modelldiagramme, fortschrittliche SQL -Abfrage -Techniken, Datensicherheitsmaßnahmen und gründliche Dokumentation wie Daten wie DatenWörterbücher und technische Leitfäden für Systemwartung und zukünftige Verbesserungen.
+
+2. Entwickelte Smart-Verkehrskontrollsystem mit Python/Django, wobei die Erkennung von Canny-Kanten für Echtzeitanalysen verwendet, Kameramameras für die Edgedatenextraktion optimiert, die Signalzeiten basierend auf der Verkehrsdichte, die Verringerung der Überlastung, die Verbesserung des Flusses, die Verwendung von Python für die Bildverarbeitung, die Verarbeitung von Python, Verringerung der Überlastung, Verbesserung des Flusses, optimierenDjango für die Webentwicklung und die Implementierung datengesteuerter Lösungen für die Effizienz des Verkehrsmanagements.
+
+Persönliche Fähigkeiten
+Schneller Lerner
+Starke Kommunikationsfähigkeiten
+Probleme lösen
+Kundenfokus
+Teamarbeit und anpassungsfähig
+
+
+Packaged App Development Associate

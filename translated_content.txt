@@ -1,0 +1,79 @@
+Internacionalización en la bota de primavera utilizando un frasco reutilizable
+  
+Descripción general
+  
+Esta documentación describe la implementación de la internacionalización y la localización.
+En dos aplicaciones de consumo que usan un frasco reutilizable en el arranque de primavera.El frasco reutilizable contiene
+Clases de configuración y utilidad para manejar la localización de mensajes y el cambio de lenguaje.Por
+Incluyendo este jar como dependencia en las aplicaciones de consumo, se puede implementar fácilmente
+Características de internacionalización sin duplicar el código.
+ 
+Estructura del proyecto
+  
+El proyecto consta de los siguientes componentes:
+1. Jar reutilizable (jarra de internacionalización):
+   - Contiene clases de configuración y utilidad para la internacionalización.
+   - Proporciona la localización de mensajes y la funcionalidad de conmutación de lenguaje.
+   - empaquetado como un archivo JAR e incluida como dependencia en las aplicaciones de consumo.
+  
+2. Aplicación del consumidor 1:
+   - Utiliza el frasco de internacionalización para la internacionalización.
+   - Demuestra cómo configurar y usar el jar en una aplicación de arranque de resorte.
+  
+3. Aplicación del consumidor 2:
+   - Similar a la aplicación del consumidor 1 pero proporciona un caso de uso o escenario de uso diferente para
+internacionalización.
+  
+ 
+ 
+Jarra de internacionalización
+  
+El frasco de internacionalización contiene los siguientes componentes:
+1. MessagesurCeConfiguration: configura la fuente de mensajes para recuperar localizadas
+mensajes.
+2. Localeros para el local: configura el resolución local para resolver la localidad del usuario.
+3. InternationalizationService: proporciona métodos para recuperar mensajes localizados y
+cambiando la ubicación.
+ 
+Aplicaciones de consumo
+ 
+Ambas aplicaciones de consumo tienen los siguientes componentes:
+1. Homecontroller: clase de controlador que maneja las solicitudes relacionadas con la internacionalización.
+2. Index.html: plantilla de thymeleaf para mostrar mensajes localizados.
+3. Mensajes. Propertias: el archivo Message.Properties se utiliza para la localización de mensajes.Este
+El archivo contiene pares de valor clave donde las teclas representan códigos de mensaje y los valores
+Representar los mensajes reales en la configuración regional predeterminada.
+ 
+Cómo utilizar
+Para usar el frasco de internacionalización en una aplicación del consumidor:
+1. Agregue el frasco de internacionalización como dependencia en el `pom.xml` de la aplicación del consumidor
+archivo.
+2. Configure la anotación "@import" en la clase principal de la aplicación del consumidor para llamar al
+"MessagesurCeConfiguration" Java Clase de JAR Dependency.
+3. Use el 'Internationalizationservice` Bean en los controladores de la aplicación de consumo para recuperar
+Mensajes localizados y cambiar el local.
+  
+ 
+ 
+Ventajas
+  
+El uso de un frasco reutilizable para la internacionalización ofrece varias ventajas:
+1. Reutilización del código: la lógica de internacionalización está encapsulada en un módulo reutilizable,
+Reducción de la duplicación del código.
+2. Modularización: la lógica de internacionalización está separada de las aplicaciones de consumo,
+Mejora de mantenimiento.
+3. Integración fácil: agregar el fras como dependencia simplifica la integración de
+Características de internacionalización.
+4. Configuración centralizada: Configuración relacionada con fuentes de mensajes y solucionadores locales
+está centralizado en el frasco.
+5. Consistencia: el uso de un enfoque estandarizado garantiza una experiencia de usuario consistente entre
+aplicaciones.
+6. Escalabilidad: la naturaleza modular del frasco permite una fácil escalabilidad como nuevos idiomas
+y se pueden agregar características.
+ 
+Conclusión
+  
+El uso de un frasco reutilizable para la internacionalización en aplicaciones de arranque de primavera proporciona un
+forma conveniente y eficiente de implementar soporte multilingüe.Al encapsular
+Lógica de internacionalización En un módulo separado, los desarrolladores pueden lograr la reutilización del código,
+mantenimiento y escalabilidad.
