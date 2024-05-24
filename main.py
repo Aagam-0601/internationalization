@@ -1,4 +1,3 @@
-import os
 import streamlit as st
 from file_translator.file_translator import FileTranslator
 
@@ -37,6 +36,15 @@ def app():
                 translated_file_path = translator.save_translated_text(translated_text, input_file.name)
                 if translated_file_path:
                     st.success(f"Translated content saved as: {translated_file_path}")
+
+                    with open(translated_file_path, "rb") as file:
+                        btn = st.download_button(
+                            label="Download Translated File",
+                            data=file,
+                            file_name=translated_file_path,
+                            mime=f"application/{file_extension}"
+                        )
+                    
                     # Display translated text
                     st.write("Translated Text:")
                     st.text_area("", translated_text, height=200)
@@ -44,7 +52,6 @@ def app():
                     st.error("Failed to save translated content.")
             else:
                 st.error("Translation failed.")
-            st.download_button("Download file ", extracted_text)
         else:
             st.error("Failed to extract text from input file.") 
         

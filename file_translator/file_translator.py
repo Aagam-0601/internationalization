@@ -1,3 +1,4 @@
+from io import BytesIO
 import os
 from pptx import Presentation
 from docx import Document
@@ -27,9 +28,10 @@ class FileTranslator:
 
     def extract_text_from_pdf(self, file):
         extracted_text = ""
-        with fitz.open(file) as pdf_document:
-            for page in pdf_document:
-                extracted_text += page.get_text()
+        file_bytes = BytesIO(file.read())
+        pdf_document = fitz.open(stream=file_bytes, filetype="pdf")
+        for page in pdf_document:
+            extracted_text += page.get_text()
         return extracted_text
 
     def extract_text_from_xlsx(self, file):
