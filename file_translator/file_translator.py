@@ -1,114 +1,88 @@
-from io import BytesIO
-import os
-from pptx import Presentation
-from docx import Document
-import openpyxl
-import fitz
+from docx import Document as DocxDocument
 from googletrans import Translator
-from reportlab.lib.pagesizes import letter
-from reportlab.platypus import SimpleDocTemplate, Paragraph
-from reportlab.lib.styles import getSampleStyleSheet
+from docx.shared import Pt
+import os
+from docx.enum.text import WD_ALIGN_PARAGRAPH
 
 class FileTranslator:
-    def extract_text_from_docx(self, file):
-        extracted_text = ""
-        doc = Document(file)
-        for paragraph in doc.paragraphs:
-            extracted_text += paragraph.text + "\n"
-        return extracted_text
+    def __init__(self):
+        self.translator = Translator()
 
-    def extract_text_from_pptx(self, file):
-        extracted_text = ""
-        presentation = Presentation(file)
-        for slide in presentation.slides:
-            for shape in slide.shapes:
-                if hasattr(shape, "text"):
-                    extracted_text += shape.text + "\n"
-        return extracted_text
-
-    def extract_text_from_pdf(self, file):
-        extracted_text = ""
-        file_bytes = BytesIO(file.read())
-        pdf_document = fitz.open(stream=file_bytes, filetype="pdf")
-        for page in pdf_document:
-            extracted_text += page.get_text()
-        return extracted_text
-
-    def extract_text_from_xlsx(self, file):
-        extracted_text = ""
-        try:
-            wb = openpyxl.load_workbook(file)
-            for sheet in wb.sheetnames:
-                ws = wb[sheet]
-                for row in ws.iter_rows(values_only=True):
-                    for cell in row:
-                        if cell:
-                            extracted_text += str(cell) + "\n"
-        except Exception as e:
-            print(f"Error extracting text from XLSX: {e}")
-        return extracted_text
-
-    def extract_text_from_txt(self, file):
-        extracted_text = ""
-        extracted_text = file.read().decode("utf-8")
-        return extracted_text
-
-    def extract_text_from_properties(self, file):
-        extracted_text = ""
-        for line in file:
-            line = line.decode("utf-8").strip()
-            if line and not line.startswith('#'):
-                key_value = line.split('=', 1)
-                if len(key_value) == 2:
-                    key, value = key_value
-                    extracted_text += f"{key.strip()}={value.strip()}\n"
-        return extracted_text
+    def extract_text_and_formatting_from_docx(self, file):
+        doc = DocxDocument(file)
+        content = []
+        for i, paragraph in enumerate(doc.paragraphs):
+            runs = []
+            for j, run in enumerate(paragraph.runs):
+                runs.append({
+                    'text': run.text,
+                    'bold': run.bold,
+                    'italic': run.italic,
+                    'underline': run.underline,
+                    'font_size': run.font.size.pt if run.font.size else None,
+                    'font_name': run.font.name,
+                })
+            alignment = paragraph.alignment
+            print(f"Paragraph {i}: Text: '{paragraph.text}', Alignment: {alignment}")
+            content.append({'runs': runs, 'alignment': alignment})
+        return content
 
     def translate_text(self, text, target_language):
         try:
-            translator = Translator()
-            translated = translator.translate(text, dest=target_language)
+            translated = self.translator.translate(text, dest=target_language)
             return translated.text
         except Exception as e:
-            print(f"Translation failed: {e}")
-            return None
+            return f"Translation failed: {e}"
 
-    def save_translated_text(self, translated_text, file_name):
-        file_name, file_extension = os.path.splitext(file_name)
-        translated_file_path = f"{file_name}_translated{file_extension}"
-        try:
-            if file_extension.lower() == '.docx':
-                doc = Document()
-                for paragraph in translated_text.split('\n'):
-                    doc.add_paragraph(paragraph)
-                doc.save(translated_file_path)
-            elif file_extension.lower() == '.pptx':
-                presentation = Presentation()
-                for slide_text in translated_text.split('\n\n'):
-                    slide = presentation.slides.add_slide(presentation.slide_layouts[5])
-                    text_frame = slide.shapes.add_textbox(0, 0, 1, 1).text_frame
-                    text_frame.text = slide_text
-                presentation.save(translated_file_path)
-            elif file_extension.lower() == '.pdf':
-                styles = getSampleStyleSheet()
-                doc = SimpleDocTemplate(translated_file_path, pagesize=letter)
-                elements = []
-                for paragraph in translated_text.split('\n'):
-                    elements.append(Paragraph(paragraph, styles["BodyText"]))
-                doc.build(elements)
-            elif file_extension.lower() == '.xlsx':
-                translated_workbook = openpyxl.Workbook()
-                translated_sheet = translated_workbook.active
-                for line in translated_text.split('\n'):
-                    translated_sheet.append([line])
-                translated_workbook.save(translated_file_path)
-            elif file_extension.lower() == '.txt':
-                with open(translated_file_path, 'w', encoding='utf-8') as file:
-                    file.write(translated_text)
+    def translate_runs(self, runs, target_language):
+        translated_runs = []
+        for run in runs:
+            translated_text = self.translate_text(run['text'], target_language)
+            translated_run = {
+                'text': translated_text,
+                'bold': run['bold'],
+                'italic': run['italic'],
+                'underline': run['underline'],
+                'font_size': run['font_size'],
+                'font_name': run['font_name'],
+            }
+            translated_runs.append(translated_run)
+        return translated_runs
+
+    def translate_docx_content(self, content, target_language):
+        translated_content = []
+        for paragraph in content:
+            translated_paragraph = {
+                'runs': self.translate_runs(paragraph['runs'], target_language),
+                'alignment': paragraph['alignment']
+            }
+            translated_content.append(translated_paragraph)
+        return translated_content
+
+    def apply_formatting(self, p, run):
+        r = p.add_run(run['text'])
+        r.bold = run['bold']
+        r.italic = run['italic']
+        r.underline = run['underline']
+        if run['font_size']:
+            r.font.size = Pt(run['font_size'])
+        if run['font_name']:
+            r.font.name = run['font_name']
+
+    def save_translated_docx(self, translated_content, file_name):
+        doc = DocxDocument()
+        
+        for i, paragraph in enumerate(translated_content):
+            p = doc.add_paragraph()
+            for run in paragraph['runs']:
+                self.apply_formatting(p, run)
+            
+            if paragraph['alignment'] is not None:
+                print(f"Setting alignment for paragraph {i}: {paragraph['alignment']}")
+                p.alignment = paragraph['alignment']
             else:
-                print("Unsupported file format.")
-                return None
-        except Exception as e:
-            print(f"Error saving translated file: {e}")
-            return None
-        return translated_file_path
+                print(f"No alignment for paragraph {i}")
+
+        translated_file_path = f"{os.path.splitext(file_name)[0]}_translated.docx"
+        doc.save(translated_file_path)
+        return translated_file_path, "Translation and saving successful."

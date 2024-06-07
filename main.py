@@ -1,59 +1,40 @@
 import streamlit as st
 from file_translator.file_translator import FileTranslator
 
-def app():
+def main():
     st.title("File Translator")
 
     # Get input file
-    input_file = st.file_uploader("Upload a file", type=["docx", "pptx", "pdf", "xlsx", "txt", "properties"])
+    input_file = st.file_uploader("Upload a .docx file", type=["docx"])
 
     # Get target language
-    target_language = st.text_input("Enter target language code (e.g., 'es' for Spanish)")
+    target_language = st.text_input("Enter target language (e.g., 'es' for Spanish)")
 
     if input_file and target_language:
         translator = FileTranslator()
-        file_extension = input_file.name.split(".")[-1].lower()
 
-        if file_extension == "docx":
-            extracted_text = translator.extract_text_from_docx(input_file)
-        elif file_extension == "pptx":
-            extracted_text = translator.extract_text_from_pptx(input_file)
-        elif file_extension == "pdf":
-            extracted_text = translator.extract_text_from_pdf(input_file)
-        elif file_extension == "xlsx":
-            extracted_text = translator.extract_text_from_xlsx(input_file)
-        elif file_extension == "txt":
-            extracted_text = translator.extract_text_from_txt(input_file)
-        elif file_extension == "properties":
-            extracted_text = translator.extract_text_from_properties(input_file)
-        else:
-            st.error("Unsupported file format.")
-            return
+        try:
+            content = translator.extract_text_and_formatting_from_docx(input_file)
+            st.write("Extracted Text:")
+            for paragraph in content:
+                for run in paragraph['runs']:
+                    st.write(run['text'])
 
-        if extracted_text:
-            translated_text = translator.translate_text(extracted_text, target_language)
-            if translated_text:
-                translated_file_path = translator.save_translated_text(translated_text, input_file.name)
-                if translated_file_path:
-                    st.success(f"Translated content saved as: {translated_file_path}")
+            translated_content = translator.translate_docx_content(content, target_language)
+            output_file_name = f"translated_{input_file.name}"
+            translated_file_path, message = translator.save_translated_docx(translated_content, output_file_name)
+            st.success(message)
 
-                    with open(translated_file_path, "rb") as file:
-                        btn = st.download_button(
-                            label="Download Translated File",
-                            data=file,
-                            file_name=translated_file_path,
-                            mime=f"application/{file_extension}"
-                        )
-                    
-                    # Display translated text
-                    st.write("Translated Text:")
-                    st.text_area("", translated_text, height=200)
-                else:
-                    st.error("Failed to save translated content.")
-            else:
-                st.error("Translation failed.")
-        else:
-            st.error("Failed to extract text from input file.") 
-        
+            with open(translated_file_path, "rb") as file:
+                st.download_button(
+                    label="Download Translated File",
+                    data=file,
+                    file_name=translated_file_path,
+                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                )
+
+        except Exception as e:
+            st.error(f"An error occurred: {e}")
+
 if __name__ == "__main__":
-    app()
+    main()
